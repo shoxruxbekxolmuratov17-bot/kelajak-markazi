@@ -58,6 +58,7 @@ function regionDistricts(): District[] {
 }
 
 async function main() {
+  process.env.KM_SEEDING = '1';
   const hash = (p: string) => bcrypt.hashSync(p, 10);
   const did = DEFAULT_DISTRICT_ID;
   const kitob = 'd-kitob';

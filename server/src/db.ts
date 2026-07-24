@@ -58,12 +58,15 @@ function resetSqliteState() {
 }
 
 async function autoSeedSqliteIfEmpty() {
+  if (process.env.KM_SEEDING === '1') {
+    throw new Error('Seed jarayoni DB ni yozmayapti. npm run seed ni qo‘lda tekshiring.');
+  }
   const { spawnSync } = await import('node:child_process');
   console.warn('SQLite DB bo‘sh — avtomatik seed ishga tushirilmoqda...');
   const r = spawnSync('npx', ['tsx', 'src/seed.ts'], {
     cwd: path.join(__dirname, '..'),
     stdio: 'inherit',
-    env: process.env,
+    env: { ...process.env, KM_SEEDING: '1' },
     shell: process.platform === 'win32',
   });
   if (r.status !== 0) {
@@ -102,6 +105,10 @@ export async function initDb() {
   try {
     loadDb();
   } catch {
+    if (process.env.KM_SEEDING === '1') {
+      getSqlite();
+      return backend;
+    }
     await autoSeedSqliteIfEmpty();
     loadDb();
   }
