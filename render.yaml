@@ -34,8 +34,9 @@ services:
     pullRequestPreviewsEnabled: false
     envVars:
       - key: VITE_API_URL
-        sync: false
-        # Render dashboard: https://SIZNING-API.onrender.com/api
+        value: https://kelajak-api.onrender.com/api
+      - key: NODE_ENV
+        value: production
 
   # Agar Static Site o'rniga Web Service ishlatsangiz (tavsiya etilmaydi):
   # buildCommand: npm install && npm run build

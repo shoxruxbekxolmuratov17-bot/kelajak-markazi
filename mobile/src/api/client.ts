@@ -109,6 +109,17 @@ export async function setActiveDistrictId(id: string | null) {
 
 const DEFAULT_TIMEOUT_MS = 15000;
 const LOGIN_TIMEOUT_MS = 20000;
+const REMOTE_DEFAULT_TIMEOUT_MS = 90000;
+const REMOTE_LOGIN_TIMEOUT_MS = 90000;
+const REMOTE_BOOTSTRAP_TIMEOUT_MS = 120000;
+
+function isSlowRemoteApi(url: string) {
+  return /onrender\.com|render\.com/i.test(url);
+}
+
+function resolveTimeout(base: number, url: string) {
+  return isSlowRemoteApi(url) ? Math.max(base, REMOTE_DEFAULT_TIMEOUT_MS) : base;
+}
 
 type RequestOptions = RequestInit & { timeoutMs?: number };
 
@@ -116,6 +127,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   const { timeoutMs = DEFAULT_TIMEOUT_MS, ...fetchOptions } = options;
   await initApiToken();
   const apiUrl = getApiUrl();
+  const effectiveTimeout = timeoutMs ?? resolveTimeout(DEFAULT_TIMEOUT_MS, apiUrl);
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(fetchOptions.headers as Record<string, string> | undefined),
@@ -124,7 +136,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   if (activeDistrictId) headers['X-District-Id'] = activeDistrictId;
 
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const timer = setTimeout(() => controller.abort(), effectiveTimeout);
 
   try {
     const res = await fetch(`${apiUrl}${path}`, {
@@ -140,12 +152,16 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   } catch (e) {
     if (e instanceof Error && e.name === 'AbortError') {
       throw new Error(
-        `Server javob bermadi (timeout).\nAPI: ${apiUrl}\nTelefon va PC bir Wi‑Fi da bo'lsin; npm run stop → npm run dev:tunnel`
+        isSlowRemoteApi(apiUrl)
+          ? `Server uyg'onmoqda (Render bepul rejim, 1 daqiqagacha kuting).\nAPI: ${apiUrl}`
+          : `Server javob bermadi (timeout).\nAPI: ${apiUrl}\nTelefon va PC bir Wi‑Fi da bo'lsin; npm run dev:tunnel`
       );
     }
     if (e instanceof TypeError) {
       throw new Error(
-        `Serverga ulanishning imkoni yo'q.\nAPI: ${apiUrl}\nAPI ishlayaptimi? (port 3001)`
+        isSlowRemoteApi(apiUrl)
+          ? `Server hali uyg'onmagan yoki internet yo'q.\nAPI: ${apiUrl}\nBir daqiqa kutib, qayta urinib ko'ring.`
+          : `Serverga ulanishning imkoni yo'q.\nAPI: ${apiUrl}\nAPI ishlayaptimi? (port 3001)`
       );
     }
     throw e;
@@ -157,23 +173,28 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
 export const api = {
   health: () =>
     request<{ ok: boolean; db?: string; cache?: string; demoMode?: boolean }>('/health', {
-      timeoutMs: 8000,
+      timeoutMs: resolveTimeout(8000, getApiUrl()),
     }),
   login: (username: string, password: string) =>
     request<{ token: string; user: Record<string, unknown> }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
-      timeoutMs: LOGIN_TIMEOUT_MS,
+      timeoutMs: resolveTimeout(LOGIN_TIMEOUT_MS, getApiUrl()),
     }),
   parentLogin: (phone: string, pin: string) =>
     request<{ token: string; user: Record<string, unknown> }>('/auth/parent', {
       method: 'POST',
       body: JSON.stringify({ phone, pin }),
-      timeoutMs: LOGIN_TIMEOUT_MS,
+      timeoutMs: resolveTimeout(LOGIN_TIMEOUT_MS, getApiUrl()),
     }),
   me: () =>
-    request<{ user: Record<string, unknown> }>('/auth/me', { timeoutMs: LOGIN_TIMEOUT_MS }),
-  bootstrap: () => request<Record<string, unknown>>('/bootstrap', { timeoutMs: 20000 }),
+    request<{ user: Record<string, unknown> }>('/auth/me', {
+      timeoutMs: resolveTimeout(LOGIN_TIMEOUT_MS, getApiUrl()),
+    }),
+  bootstrap: () =>
+    request<Record<string, unknown>>('/bootstrap', {
+      timeoutMs: isSlowRemoteApi(getApiUrl()) ? REMOTE_BOOTSTRAP_TIMEOUT_MS : 20000,
+    }),
   dashboardStats: () => request<Record<string, unknown>>('/stats/dashboard'),
   backup: () => request<{ ok: boolean; path: string }>('/admin/backup', { method: 'POST' }),
   districts: () =>

@@ -69,6 +69,18 @@ const DISTRICT_KEY = 'kelajak-district-id';
 const DEFAULT_TIMEOUT_MS = 15000;
 const AUTH_TIMEOUT_MS = 20000;
 const HEALTH_TIMEOUT_MS = 8000;
+const REMOTE_DEFAULT_TIMEOUT_MS = 90000;
+const REMOTE_AUTH_TIMEOUT_MS = 90000;
+const REMOTE_HEALTH_TIMEOUT_MS = 90000;
+const REMOTE_BOOTSTRAP_TIMEOUT_MS = 120000;
+
+function isSlowRemoteApi(url: string) {
+  return /onrender\.com|render\.com/i.test(url);
+}
+
+function resolveTimeout(base: number, url: string) {
+  return isSlowRemoteApi(url) ? Math.max(base, REMOTE_DEFAULT_TIMEOUT_MS) : base;
+}
 
 export function getToken() {
   try {
@@ -109,6 +121,7 @@ type RequestOptions = RequestInit & { timeoutMs?: number };
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   await initApiConfig();
   const { timeoutMs = DEFAULT_TIMEOUT_MS, ...fetchOptions } = options;
+  const effectiveTimeout = resolveTimeout(timeoutMs, API_URL);
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(fetchOptions.headers as Record<string, string> | undefined),
@@ -119,7 +132,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   if (districtId) headers['X-District-Id'] = districtId;
 
   const controller = new AbortController();
-  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+  const timer = window.setTimeout(() => controller.abort(), effectiveTimeout);
 
   try {
     const res = await fetch(`${API_URL}${path}`, {
@@ -134,10 +147,18 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     return data as T;
   } catch (e) {
     if (e instanceof DOMException && e.name === 'AbortError') {
-      throw new Error('Server javob bermadi (timeout)');
+      throw new Error(
+        isSlowRemoteApi(API_URL)
+          ? 'Server uyg\'onmoqda (Render bepul rejim — 1 daqiqagacha kuting)'
+          : 'Server javob bermadi (timeout)'
+      );
     }
     if (e instanceof TypeError) {
-      throw new Error(`Serverga ulanishning imkoni yo'q (API: ${API_URL})`);
+      throw new Error(
+        isSlowRemoteApi(API_URL)
+          ? `Server hali uyg'onmagan. Bir daqiqa kutib qayta urinib ko'ring (API: ${API_URL})`
+          : `Serverga ulanishning imkoni yo'q (API: ${API_URL})`
+      );
     }
     throw e;
   } finally {
@@ -146,20 +167,23 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
 }
 
 export const api = {
-  health: () => request<{ ok: boolean }>('/health', { timeoutMs: HEALTH_TIMEOUT_MS }),
+  health: () =>
+    request<{ ok: boolean }>('/health', {
+      timeoutMs: isSlowRemoteApi(API_URL) ? REMOTE_HEALTH_TIMEOUT_MS : HEALTH_TIMEOUT_MS,
+    }),
   login: (username: string, password: string) =>
     request<{ token: string; user: AuthUser }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
-      timeoutMs: AUTH_TIMEOUT_MS,
+      timeoutMs: resolveTimeout(AUTH_TIMEOUT_MS, API_URL),
     }),
   me: () =>
-    request<{ user: AuthUser }>('/auth/me', { timeoutMs: AUTH_TIMEOUT_MS }),
+    request<{ user: AuthUser }>('/auth/me', { timeoutMs: resolveTimeout(AUTH_TIMEOUT_MS, API_URL) }),
   parentLogin: (phone: string, pin: string) =>
     request<{ token: string; user: AuthUser }>('/auth/parent', {
       method: 'POST',
       body: JSON.stringify({ phone, pin }),
-      timeoutMs: AUTH_TIMEOUT_MS,
+      timeoutMs: resolveTimeout(AUTH_TIMEOUT_MS, API_URL),
     }),
   createMessage: (data: Partial<Message>) =>
     request<Message>('/messages', { method: 'POST', body: JSON.stringify(data) }),
@@ -180,7 +204,9 @@ export const api = {
       labEquipment: LabEquipment[];
       partnerships: Partnership[];
       schools: School[];
-    }>('/bootstrap', { timeoutMs: 12000 }),
+    }>('/bootstrap', {
+      timeoutMs: isSlowRemoteApi(API_URL) ? REMOTE_BOOTSTRAP_TIMEOUT_MS : 20000,
+    }),
   dashboardStats: () => request<Record<string, unknown>>('/stats/dashboard'),
   createCircle: (data: Partial<Circle>) => request<Circle>('/circles', { method: 'POST', body: JSON.stringify(data) }),
   updateCircle: (id: string, data: Partial<Circle>) =>

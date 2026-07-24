@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { InteractionManager } from 'react-native';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { safeStorage } from '@/src/storage/safeStorage';
 import type {
@@ -41,6 +41,7 @@ export type CenterInfoState = {
 interface AppState {
   darkMode: boolean;
   apiOnline: boolean;
+  apiSyncing: boolean;
   circles: Circle[];
   students: Student[];
   teachers: Teacher[];
@@ -130,6 +131,7 @@ export const useStore = create<AppState>()(
     (set, get) => ({
       darkMode: false,
       apiOnline: false,
+      apiSyncing: false,
       circles: initialCircles,
       students: initialStudents,
       teachers: initialTeachers,
@@ -200,9 +202,13 @@ export const useStore = create<AppState>()(
       },
 
       hydrateFromApi: async () => {
+        set({ apiSyncing: true });
         try {
           await initApiToken();
           const data = await api.bootstrap();
+          await new Promise<void>((resolve) => {
+            InteractionManager.runAfterInteractions(() => resolve());
+          });
           const hasAuth = !!get().authUser;
           const raw = (data.circles as Circle[]) || get().circles;
           const circles = [...raw].sort((a, b) => {
@@ -254,6 +260,8 @@ export const useStore = create<AppState>()(
           }
         } catch {
           set({ apiOnline: false });
+        } finally {
+          set({ apiSyncing: false });
         }
       },
 

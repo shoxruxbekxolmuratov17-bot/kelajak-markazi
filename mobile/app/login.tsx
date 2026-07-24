@@ -125,7 +125,7 @@ export default function LoginScreen() {
                   </Pressable>
                 </View>
                 <Button
-                  label={loading ? 'Kirilmoqda...' : 'Kirish'}
+                  label={loading ? "Server javobini kutmoqda..." : 'Kirish'}
                   onPress={handleStaffLogin}
                   colors={colors}
                   disabled={loading}
@@ -153,7 +153,7 @@ export default function LoginScreen() {
                   autoCapitalize="none"
                 />
                 <Button
-                  label={loading ? 'Kirilmoqda...' : 'Kirish'}
+                  label={loading ? "Server javobini kutmoqda..." : 'Kirish'}
                   onPress={handleParentLogin}
                   colors={colors}
                   disabled={loading}

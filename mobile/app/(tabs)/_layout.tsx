@@ -2,6 +2,7 @@ import { Tabs, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Platform } from 'react-native';
 import { useStore } from '@/src/store/useStore';
+import { ApiStatusBanner } from '@/components/ApiStatusBanner';
 import { useTheme } from '@/hooks/useTheme';
 
 export default function TabLayout() {
@@ -28,7 +29,9 @@ export default function TabLayout() {
   if (authUser.role === 'parent') return <Redirect href="/(parent)" />;
 
   return (
-    <Tabs
+    <>
+      <ApiStatusBanner />
+      <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
@@ -96,5 +99,6 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    </>
   );
 }
