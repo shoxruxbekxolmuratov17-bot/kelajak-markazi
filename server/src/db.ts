@@ -44,6 +44,34 @@ let relationalReady = false;
 let backend: 'sqlite' | 'postgres' = 'sqlite';
 let writeQueue: Promise<void> = Promise.resolve();
 
+function resetSqliteState() {
+  cache = null;
+  relationalReady = false;
+  if (sqlite) {
+    try {
+      sqlite.close();
+    } catch {
+      /* ignore */
+    }
+    sqlite = null;
+  }
+}
+
+async function autoSeedSqliteIfEmpty() {
+  const { spawnSync } = await import('node:child_process');
+  console.warn('SQLite DB bo‘sh — avtomatik seed ishga tushirilmoqda...');
+  const r = spawnSync('npx', ['tsx', 'src/seed.ts'], {
+    cwd: path.join(__dirname, '..'),
+    stdio: 'inherit',
+    env: process.env,
+    shell: process.platform === 'win32',
+  });
+  if (r.status !== 0) {
+    throw new Error('Auto-seed failed. Run: npm run seed');
+  }
+  resetSqliteState();
+}
+
 export function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
   if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR, { recursive: true });
@@ -71,7 +99,12 @@ export async function initDb() {
     }
   }
   backend = 'sqlite';
-  loadDb();
+  try {
+    loadDb();
+  } catch {
+    await autoSeedSqliteIfEmpty();
+    loadDb();
+  }
   return backend;
 }
 

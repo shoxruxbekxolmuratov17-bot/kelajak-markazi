@@ -9,7 +9,6 @@
     "start": "tsx src/index.ts",
     "seed": "tsx src/seed.ts",
     "sync:data": "node ../scripts/sync-server-data.mjs",
-    "preseed": "npm run sync:data",
     "worker": "tsx src/worker.ts",
     "backup": "tsx -e \"import { backupNow } from './src/db.ts'; console.log(backupNow());\"",
     "backup:pg": "bash ../scripts/backup-pg.sh"

@@ -8,7 +8,7 @@ RUN npm install --omit=dev
 COPY . .
 
 # Birinchi yig'ilishda demo ma'lumot (server/src/data repoda saqlanadi)
-RUN npm run seed || true
+RUN npx tsx src/seed.ts
 
 ENV NODE_ENV=production
 EXPOSE 3001
