@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../store/useStore';
-import { apiAvailable, getToken } from '../api/client';
+import { apiAvailable, getToken, initApiConfig } from '../api/client';
 
 export function useStoreHydration() {
   const [hydrated, setHydrated] = useState(() => useStore.persist.hasHydrated());
@@ -12,6 +12,7 @@ export function useStoreHydration() {
     let cancelled = false;
 
     const finish = async () => {
+      await initApiConfig();
       if (getToken()) {
         await restoreSession();
       }

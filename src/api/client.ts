@@ -16,7 +16,52 @@ import type {
   ParentAccount,
 } from '../types';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+function guessRenderApiUrl(): string | null {
+  if (typeof window === 'undefined') return null;
+  const host = window.location.hostname;
+  if (!host.endsWith('.onrender.com')) return null;
+  if (host === 'kelajak-markazi.onrender.com') {
+    return 'https://kelajak-api.onrender.com/api';
+  }
+  if (host.endsWith('-markazi.onrender.com')) {
+    return `https://${host.replace('-markazi.onrender.com', '-api.onrender.com')}/api`;
+  }
+  return null;
+}
+
+function resolveInitialApiUrl(): string {
+  const env = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
+  if (env && !/localhost|127\.0\.0\.1/i.test(env)) {
+    return env.replace(/\/$/, '');
+  }
+  return guessRenderApiUrl() || 'http://localhost:3001/api';
+}
+
+let API_URL = resolveInitialApiUrl();
+let configReady: Promise<void> | null = null;
+
+/** Render/production: /api-config.json dan API manzilini o‘qish */
+export async function initApiConfig() {
+  if (configReady) return configReady;
+  configReady = (async () => {
+    try {
+      const res = await fetch('/api-config.json', { cache: 'no-store' });
+      if (!res.ok) return;
+      const data = (await res.json()) as { apiUrl?: string };
+      const url = data.apiUrl?.trim();
+      if (url && !/localhost|127\.0\.0\.1/i.test(url)) {
+        API_URL = url.replace(/\/$/, '');
+      }
+    } catch {
+      // offline yoki fayl yo‘q
+    }
+  })();
+  await configReady;
+}
+
+export function getApiUrl() {
+  return API_URL;
+}
 
 const TOKEN_KEY = 'kelajak-token';
 const DISTRICT_KEY = 'kelajak-district-id';
@@ -62,6 +107,7 @@ export function setActiveDistrictId(id: string | null) {
 type RequestOptions = RequestInit & { timeoutMs?: number };
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  await initApiConfig();
   const { timeoutMs = DEFAULT_TIMEOUT_MS, ...fetchOptions } = options;
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -91,7 +137,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
       throw new Error('Server javob bermadi (timeout)');
     }
     if (e instanceof TypeError) {
-      throw new Error("Serverga ulanishning imkoni yo'q");
+      throw new Error(`Serverga ulanishning imkoni yo'q (API: ${API_URL})`);
     }
     throw e;
   } finally {
