@@ -16,7 +16,7 @@ const radiusRatio = 0.22;
 export function LogoMark({ size = 40 }: { size?: number }) {
   return (
     <Image
-      source={require('../assets/images/icon.png')}
+      source={require('../assets/images/app-icon.png')}
       style={{ width: size, height: size, borderRadius: size * radiusRatio }}
       resizeMode="cover"
     />
