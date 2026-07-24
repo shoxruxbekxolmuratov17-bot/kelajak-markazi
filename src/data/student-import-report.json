@@ -1,0 +1,248 @@
+{
+  "assigned": 1929,
+  "unmatched": 0,
+  "byCircle": {
+    "cl-17-15-maktab": {
+      "n": 100,
+      "name": "Maktabga tayyorlov",
+      "teacher": "Raxmonova Zuhra Xolmurodovna",
+      "school": "15-son umumta'lim maktabi"
+    },
+    "c-tou-02": {
+      "n": 20,
+      "name": "Yosh ekolog va tabiatshunos",
+      "teacher": "Tayinlanmagan",
+      "school": "Kelajak Markazi"
+    },
+    "cl-14-16-maktab": {
+      "n": 28,
+      "name": "Matematika",
+      "teacher": "Xushvaqtova Komila Xushvaqt qizi",
+      "school": "16-son umumta'lim maktabi"
+    },
+    "cl-18-markaz": {
+      "n": 28,
+      "name": "Matematika",
+      "teacher": "Nortojiyev Mirjalol Farhod o'g'li",
+      "school": "Kelajak Markazi"
+    },
+    "cl-24-36-maktab": {
+      "n": 28,
+      "name": "Matematika",
+      "teacher": "Abdiyaytova Marvarid Dilshod qizi",
+      "school": "36-son umumta'lim maktabi"
+    },
+    "c-pr-02": {
+      "n": 30,
+      "name": "Biologiya",
+      "teacher": "Markaz murabbiysi",
+      "school": "Kelajak Markazi"
+    },
+    "cl-07-markaz": {
+      "n": 100,
+      "name": "Kvilling",
+      "teacher": "O'runova Elyora Ramisovna",
+      "school": "Kelajak Markazi"
+    },
+    "cl-11-54-maktab": {
+      "n": 100,
+      "name": "Kvilling",
+      "teacher": "Ro'zimurodova Xadicha Qulmamat qizi",
+      "school": "54-son umumta'lim maktabi"
+    },
+    "cl-27-68-maktab": {
+      "n": 11,
+      "name": "Ingliz tili",
+      "teacher": "Baymurodova Hulkar Qahhor qizi",
+      "school": "68-son umumta'lim maktabi"
+    },
+    "cl-28-67-maktab": {
+      "n": 10,
+      "name": "Ingliz tili",
+      "teacher": "Shozamonova Guzal Yaxshiboyevna",
+      "school": "67-son umumta'lim maktabi"
+    },
+    "cl-29-33-maktab": {
+      "n": 10,
+      "name": "Ingliz tili",
+      "teacher": "Xoliqova Iroda Solih qizi",
+      "school": "33-son umumta'lim maktabi"
+    },
+    "cl-33-83-maktab": {
+      "n": 10,
+      "name": "Ingliz tili",
+      "teacher": "Sodiqov Abdukarim Yusufaliyevich",
+      "school": "83-son umumta'lim maktabi"
+    },
+    "c-cr-09": {
+      "n": 83,
+      "name": "Yosh pazanda va yosh qandolatchi",
+      "teacher": "Markaz murabbiysi",
+      "school": "Tuman maktablari"
+    },
+    "cl-30-95-maktab": {
+      "n": 50,
+      "name": "Tarix",
+      "teacher": "Norqulov Nodirbek Alisher o'g'li",
+      "school": "95-son umumta'lim maktabi"
+    },
+    "cl-31-95-maktab": {
+      "n": 50,
+      "name": "Tarix",
+      "teacher": "Eshniyazov Elyor Bekmamat o'g'li",
+      "school": "95-son umumta'lim maktabi"
+    },
+    "c-tech-02": {
+      "n": 30,
+      "name": "Avtomodel",
+      "teacher": "Tayinlanmagan",
+      "school": "Kelajak Markazi"
+    },
+    "cl-01-markaz": {
+      "n": 30,
+      "name": "Tikish-bichish",
+      "teacher": "Ergasheva Maxsuda Saydullayevna",
+      "school": "Kelajak Markazi"
+    },
+    "cl-15-markaz": {
+      "n": 30,
+      "name": "Tikish-bichish",
+      "teacher": "Obidova Luiza Abduraxmonovna",
+      "school": "Kelajak Markazi"
+    },
+    "cl-10-16-maktab": {
+      "n": 83,
+      "name": "Mayda plastika",
+      "teacher": "Rasulova Xursand Qurbonovna",
+      "school": "16-son umumta'lim maktabi"
+    },
+    "cl-19-65-maktab": {
+      "n": 81,
+      "name": "Mayda plastika",
+      "teacher": "Avazova Ozoda Tuxtayevna",
+      "school": "65-son umumta'lim maktabi"
+    },
+    "cl-20-65-maktab": {
+      "n": 81,
+      "name": "Mayda plastika",
+      "teacher": "Mosheva Ra'no Bekmurodovna",
+      "school": "65-son umumta'lim maktabi"
+    },
+    "cl-02-markaz": {
+      "n": 45,
+      "name": "Kimyo",
+      "teacher": "Eshmatova Zamira Numardjanovna",
+      "school": "Kelajak Markazi"
+    },
+    "cl-04-markaz": {
+      "n": 45,
+      "name": "Kimyo",
+      "teacher": "Kenjayev Elyor Shavkat o'g'li",
+      "school": "Kelajak Markazi"
+    },
+    "cl-06-47-maktab": {
+      "n": 45,
+      "name": "Oila hamshirasi",
+      "teacher": "Nematova Muxlisa Nortojyevna",
+      "school": "47-son umumta'lim maktabi"
+    },
+    "cl-09-89-maktab": {
+      "n": 45,
+      "name": "Oila hamshirasi",
+      "teacher": "Qayimova Dildora Baxtiyor qizi",
+      "school": "89-son umumta'lim maktabi"
+    },
+    "cl-22-65-maktab": {
+      "n": 44,
+      "name": "Oila hamshirasi",
+      "teacher": "Jumanova Gavhar Ro'zimurodovna",
+      "school": "65-son umumta'lim maktabi"
+    },
+    "c-pr-01": {
+      "n": 100,
+      "name": "Ona tili va adabiyot",
+      "teacher": "Markaz murabbiysi",
+      "school": "Tuman maktablari"
+    },
+    "cl-16-markaz": {
+      "n": 120,
+      "name": "Kompyuter dizayn",
+      "teacher": "Tursunov Anvarjon Rustam o'g'li",
+      "school": "Kelajak Markazi"
+    },
+    "cl-26-58-maktab": {
+      "n": 50,
+      "name": "Shaxmat-shashka",
+      "teacher": "Xoliyorov Sirojiddin G'ulomovich",
+      "school": "58-son umumta'lim maktabi"
+    },
+    "c-tou-04": {
+      "n": 60,
+      "name": "Floristika va fauna",
+      "teacher": "Markaz murabbiysi",
+      "school": "Kelajak Markazi"
+    },
+    "cl-13-4-maktab": {
+      "n": 36,
+      "name": "Mental arifmetika",
+      "teacher": "Xushvaqtova Surayyo Saidjon qizi",
+      "school": "4-son umumta'lim maktabi"
+    },
+    "cl-08-18-maktab": {
+      "n": 30,
+      "name": "Tasviriy san'at",
+      "teacher": "Qo'ziyeva Sanobar Suyunovna",
+      "school": "18-son umumta'lim maktabi"
+    },
+    "cl-12-markaz": {
+      "n": 30,
+      "name": "Tasviriy san'at",
+      "teacher": "Razzoqova Sanobar Yo'ldoshevna",
+      "school": "Kelajak Markazi"
+    },
+    "cl-21-markaz": {
+      "n": 35,
+      "name": "Mental arifmetika",
+      "teacher": "Zulfikarova Oydin Xudayberdiyevna",
+      "school": "Kelajak Markazi"
+    },
+    "cl-05-18-maktab": {
+      "n": 81,
+      "name": "To'quvchilik",
+      "teacher": "Lugmonova Norjamol Muxtarxonovna",
+      "school": "18-son umumta'lim maktabi"
+    },
+    "cl-03-76-maktab": {
+      "n": 60,
+      "name": "Yosh dasturchi",
+      "teacher": "Jabborova Muqaddas Baxriddinovna",
+      "school": "76-son umumta'lim maktabi"
+    },
+    "c-sp-02": {
+      "n": 20,
+      "name": "Badiiy gimnastika",
+      "teacher": "Tayinlanmagan",
+      "school": "Kelajak Markazi"
+    },
+    "c-cul-01": {
+      "n": 40,
+      "name": "Folklor",
+      "teacher": "Markaz murabbiysi",
+      "school": "Tuman maktablari"
+    },
+    "c-sp-06": {
+      "n": 20,
+      "name": "Milliy kurash",
+      "teacher": "Tayinlanmagan",
+      "school": "Kelajak Markazi"
+    },
+    "c-tech-10": {
+      "n": 30,
+      "name": "Kompyuter muhandisi",
+      "teacher": "Tayinlanmagan",
+      "school": "Kelajak Markazi"
+    }
+  },
+  "unmatchedSample": [],
+  "unmatchedBySubject": []
+}

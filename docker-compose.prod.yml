@@ -1,0 +1,55 @@
+# Production-oriented stack (API + Postgres + Redis)
+# Usage on VPS:
+#   docker compose -f docker-compose.prod.yml --env-file server/.env.production up -d --build
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-kelajak}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-kelajak}
+    volumes:
+      - kelajak_pg:/var/lib/postgresql/data
+      - ./server/migrations/001_schema.sql:/docker-entrypoint-initdb.d/001_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - kelajak_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - server/.env.production
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-kelajak}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-kelajak}
+      REDIS_URL: redis://redis:6379
+      NODE_ENV: production
+      DEMO_MODE: "false"
+    ports:
+      - "${API_PORT:-3001}:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  kelajak_pg:
+  kelajak_redis:

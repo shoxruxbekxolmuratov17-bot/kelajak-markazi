@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  typecheck-and-smoke:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: npm ci || npm install
+      - run: npx tsc --noEmit
+      - run: npm run seed
+      - run: |
+          npm run start &
+          sleep 3
+          curl -sf http://localhost:3001/api/health
+          curl -sf -X POST http://localhost:3001/api/auth/login \
+            -H 'Content-Type: application/json' \
+            -d '{"username":"admin","password":"admin123"}' | grep token
+        env:
+          DEMO_MODE: 'true'
+          JWT_SECRET: ci-test-secret-not-for-prod

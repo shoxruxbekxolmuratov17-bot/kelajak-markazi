@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Kelajak Markazi",
+    "slug": "kelajak-markazi",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "kelajakmarkazi",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "uz.qamashi.kelajakmarkazi"
+    },
+    "android": {
+      "package": "uz.qamashi.kelajakmarkazi",
+      "versionCode": 1,
+      "usesCleartextTraffic": true,
+      "adaptiveIcon": {
+        "backgroundColor": "#9588E8",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "extra": {
+      "usesCleartextTrafficRelease": false,
+      "note": "Production cleartext is forced off via app.config.js when EAS_BUILD_PROFILE=production. Real eas.projectId faqat eas init dan keyin qo'shiladi — soxta ID Expo login so'rovini chiqaradi."
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#9588E8"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
