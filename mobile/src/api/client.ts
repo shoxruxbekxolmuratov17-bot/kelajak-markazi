@@ -34,6 +34,11 @@ function resolveApiUrl(): string {
     }
   }
 
+  // Standalone APK (Render) — server keyin yoqilsa ham manzil tayyor
+  if (Platform.OS !== 'web') {
+    return 'https://kelajak-api.onrender.com/api';
+  }
+
   const lanIp = extractLanIp();
   if (lanIp) return `http://${lanIp}:3001/api`;
 

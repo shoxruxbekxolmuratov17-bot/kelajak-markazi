@@ -41,6 +41,11 @@ function run(cmd, cmdArgs, env = {}) {
   if (r.status !== 0) process.exit(r.status ?? 1);
 }
 
+function gitUsable() {
+  const r = spawnSync('git', ['--version'], { shell: true, encoding: 'utf8' });
+  return r.status === 0;
+}
+
 const apiUrl = parseUrlArg();
 
 console.log('\n========================================');
@@ -74,6 +79,8 @@ run('npx', [
   '--non-interactive',
 ], {
   EXPO_PUBLIC_API_URL: apiUrl,
+  EAS_PROJECT_ROOT: mobileDir,
+  ...(gitUsable() ? {} : { EAS_NO_VCS: '1' }),
 });
 
 console.log('\nAPK tayyor bo‘lgach EAS dashboard yoki terminaldagi havoladan yuklab oling.\n');

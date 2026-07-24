@@ -16,13 +16,22 @@ const allowCleartext =
 
 module.exports = {
   ...appJson.expo,
+  icon: './assets/images/app-icon.png',
   android: {
     ...appJson.expo.android,
     usesCleartextTraffic: allowCleartext,
+    icon: './assets/images/app-icon.png',
+    adaptiveIcon: {
+      backgroundColor: '#9588E8',
+      foregroundImage: './assets/images/app-icon.png',
+    },
   },
   extra: {
     ...appJson.expo.extra,
     usesCleartextTrafficRelease: false,
     apiUrl: process.env.EXPO_PUBLIC_API_URL || null,
+    eas: {
+      projectId: '4a991fd9-fb7d-4821-aa6a-ea246ab142b9',
+    },
   },
 };
