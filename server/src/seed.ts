@@ -16,20 +16,20 @@ import {
 import {
   officialCircles,
   officialTotals,
-} from '../../src/data/officialCircles.ts';
+} from './data/officialCircles.js';
 import {
   officialStaff,
   staffByCategory,
   DIRECTOR_FULL_NAME,
-} from '../../src/data/officialStaff.ts';
+} from './data/officialStaff.js';
 import {
   buildLeaderTeachers,
   buildOfficialNetworkSchools,
-} from '../../src/data/officialCircleLeaders.ts';
+} from './data/officialCircleLeaders.js';
 import {
   officialStudents,
   studentImportMeta,
-} from '../../src/data/officialStudents.ts';
+} from './data/officialStudents.js';
 
 const REGION_DISTRICTS: Array<{ id: string; name: string; code: string }> = [
   { id: 'd-qarshi-city', name: 'Qarshi shahri', code: 'qarshi-city' },

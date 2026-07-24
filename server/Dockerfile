@@ -7,7 +7,7 @@ RUN npm install --omit=dev
 
 COPY . .
 
-# Birinchi yig'ilishda demo ma'lumot
+# Birinchi yig'ilishda demo ma'lumot (server/src/data repoda saqlanadi)
 RUN npm run seed || true
 
 ENV NODE_ENV=production
