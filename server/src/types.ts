@@ -87,6 +87,8 @@ export interface Student {
   subsidy?: boolean;
 }
 
+export type StudentStatus = 'active' | 'graduated' | 'paused' | 'pending';
+
 export interface Teacher {
   id: string;
   firstName: string;

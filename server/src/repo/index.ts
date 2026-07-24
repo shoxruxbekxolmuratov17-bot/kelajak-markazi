@@ -4,7 +4,7 @@
  */
 import { dbBackend, loadDb, mutate, persistPayment, saveDb } from '../db.js';
 import type { DbData } from '../types.js';
-import { DEFAULT_DISTRICT_ID, type Circle, type Message, type Payment, type Student } from '../types.js';
+import { DEFAULT_DISTRICT_ID, DEFAULT_REGION_ID, type Circle, type Message, type Payment, type Student } from '../types.js';
 
 export const repo = {
   backend: () => dbBackend(),
@@ -74,7 +74,7 @@ export const repo = {
       ...data,
       districts: data.districts?.length
         ? data.districts
-        : [{ id: DEFAULT_DISTRICT_ID, name: 'Qamashi tumani', region: 'Qashqadaryo viloyati', code: 'qamashi' }],
+        : [{ id: DEFAULT_DISTRICT_ID, name: 'Qamashi tumani', region: 'Qashqadaryo viloyati', code: 'qamashi', regionId: DEFAULT_REGION_ID }],
     });
   },
 };

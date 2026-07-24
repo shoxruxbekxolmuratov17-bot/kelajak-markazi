@@ -1,4 +1,4 @@
-import type { DbData, ParentAccount, Student } from './types.js';
+import type { DbData, ParentAccount, Student, StudentStatus } from './types.js';
 import { normalizePhone } from './scope.js';
 
 export function listParentAccounts(db: DbData, districtId?: string): ParentAccount[] {
@@ -24,7 +24,7 @@ export function listParentAccounts(db: DbData, districtId?: string): ParentAccou
       school: s.school,
       grade: s.grade,
       circleNames,
-      status: s.status,
+      status: s.status as StudentStatus,
     };
 
     const existing = map.get(phoneNorm);
