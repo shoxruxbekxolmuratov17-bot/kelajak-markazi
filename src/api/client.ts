@@ -74,7 +74,6 @@ export async function initApiConfig() {
     try {
       const res = await fetch('/api-config.json', { cache: 'no-store' });
       if (!res.ok) return;
-    try {
       const data = (await res.json()) as { apiUrl?: string };
       const url = data.apiUrl?.trim();
       if (url?.startsWith('/')) {
