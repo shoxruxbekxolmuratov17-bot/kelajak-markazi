@@ -1,9 +1,9 @@
-# Render — Web + API bir xil servisda (tavsiya)
-# kelajak-api.onrender.com — sayt ham, API ham shu yerda
+# Kelajak Markazi — bitta servis (Web + API)
+# URL: https://kelajak-api.onrender.com
 
 services:
   - type: web
-    name: kelajak-api
+    name: kelajak-markazi
     runtime: docker
     dockerfilePath: ./Dockerfile
     plan: free
@@ -19,15 +19,3 @@ services:
         generateValue: true
       - key: CORS_ORIGIN
         value: "*"
-
-  # Eski alohida static sayt (ixtiyoriy — kelajak-api ishlatish osonroq)
-  - type: web
-    name: kelajak-web
-    runtime: static
-    buildCommand: npm install && VITE_API_URL=/api npm run build
-    staticPublishPath: dist
-    pullRequestPreviewsEnabled: false
-    routes:
-      - type: rewrite
-        source: /api/*
-        destination: https://kelajak-api.onrender.com/api/*

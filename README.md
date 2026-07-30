@@ -23,6 +23,16 @@ npm run dev:tunnel     # tavsiya (telefon uchun)
 
 Production: `DEMO_MODE=false` va `VITE_DEMO_MODE=false`, JWT_SECRET ni o'zgartiring.
 
+## Render (internetda)
+
+Bitta servis — web + API: **https://kelajak-api.onrender.com**
+
+Batafsil: [docs/deploy-render.md](docs/deploy-render.md)
+
+```text
+GitHub Desktop → Push → Render Manual Deploy (Docker, SERVE_WEB=1)
+```
+
 ## Yechilgan muammolar
 - SQLite DB + backups (`server/data/`)
 - Route himoya (admin sahifalar)

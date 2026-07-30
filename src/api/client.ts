@@ -43,19 +43,15 @@ function resolveInitialApiUrl(): string {
   if (isLocalHost()) {
     return 'http://localhost:3001/api';
   }
-  if (typeof window !== 'undefined') {
-    const host = window.location.hostname;
-    // Web+API bir xil servisda — darhol ishlaydi, uyg'onish kutmaydi
-    if (host === 'kelajak-api.onrender.com') {
-      return '/api';
-    }
-  }
   const env = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
   if (env?.startsWith('/')) {
     return env.replace(/\/$/, '');
   }
   if (env && !/localhost|127\.0\.0\.1/i.test(env)) {
     return env.replace(/\/$/, '');
+  }
+  if (typeof window !== 'undefined' && window.location.hostname.endsWith('.onrender.com')) {
+    return '/api';
   }
   return guessRenderApiUrl() || 'http://localhost:3001/api';
 }
