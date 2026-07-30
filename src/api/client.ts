@@ -27,7 +27,22 @@ function guessRenderApiUrl(): string | null {
   return null;
 }
 
+function isLocalHost() {
+  if (typeof window === 'undefined') return false;
+  const h = window.location.hostname;
+  return (
+    h === 'localhost' ||
+    h === '127.0.0.1' ||
+    /^192\.168\./.test(h) ||
+    /^10\./.test(h) ||
+    /^172\.(1[6-9]|2\d|3[01])\./.test(h)
+  );
+}
+
 function resolveInitialApiUrl(): string {
+  if (isLocalHost()) {
+    return 'http://localhost:3001/api';
+  }
   const env = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
   if (env && !/localhost|127\.0\.0\.1/i.test(env)) {
     return env.replace(/\/$/, '');
@@ -38,10 +53,14 @@ function resolveInitialApiUrl(): string {
 let API_URL = resolveInitialApiUrl();
 let configReady: Promise<void> | null = null;
 
-/** Render/production: /api-config.json dan API manzilini o‘qish */
+/** Production (Render): /api-config.json dan API manzilini o‘qish. Lokalda — faqat localhost API. */
 export async function initApiConfig() {
   if (configReady) return configReady;
   configReady = (async () => {
+    if (isLocalHost()) {
+      API_URL = 'http://localhost:3001/api';
+      return;
+    }
     try {
       const res = await fetch('/api-config.json', { cache: 'no-store' });
       if (!res.ok) return;
@@ -67,10 +86,10 @@ const DISTRICT_KEY = 'kelajak-district-id';
 const DEFAULT_TIMEOUT_MS = 15000;
 const AUTH_TIMEOUT_MS = 20000;
 const HEALTH_TIMEOUT_MS = 8000;
-const REMOTE_DEFAULT_TIMEOUT_MS = 90000;
-const REMOTE_AUTH_TIMEOUT_MS = 90000;
-const REMOTE_HEALTH_TIMEOUT_MS = 90000;
-const REMOTE_BOOTSTRAP_TIMEOUT_MS = 120000;
+const REMOTE_DEFAULT_TIMEOUT_MS = 25000;
+const REMOTE_AUTH_TIMEOUT_MS = 30000;
+const REMOTE_HEALTH_TIMEOUT_MS = 15000;
+const REMOTE_BOOTSTRAP_TIMEOUT_MS = 60000;
 
 function isSlowRemoteApi(url: string) {
   return /onrender\.com|render\.com/i.test(url);
@@ -306,38 +325,11 @@ export const api = {
     request<Partnership>('/partnerships', { method: 'POST', body: JSON.stringify(data) }),
 };
 
-const WAKE_MAX_ATTEMPTS = 12;
-const WAKE_DELAY_MS = 8000;
-
-function sleep(ms: number) {
-  return new Promise((resolve) => window.setTimeout(resolve, ms));
-}
-
-/** Render bepul rejim: server uxlaganda ketma-ket health ping */
-export async function wakeRemoteApi(onAttempt?: (attempt: number, max: number) => void) {
-  await initApiConfig();
-  if (!isSlowRemoteApi(API_URL)) return true;
-
-  for (let attempt = 1; attempt <= WAKE_MAX_ATTEMPTS; attempt += 1) {
-    onAttempt?.(attempt, WAKE_MAX_ATTEMPTS);
-    try {
-      await api.health();
-      return true;
-    } catch {
-      if (attempt < WAKE_MAX_ATTEMPTS) await sleep(WAKE_DELAY_MS);
-    }
-  }
-  return false;
-}
-
 export async function apiAvailable() {
   try {
     await api.health();
     return true;
   } catch {
-    if (isSlowRemoteApi(API_URL)) {
-      return wakeRemoteApi();
-    }
     return false;
   }
 }

@@ -21,7 +21,6 @@ export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [loadingHint, setLoadingHint] = useState('');
   const [locale, setLocaleState] = useState<Locale>(() => getLocale());
 
   const switchLocale = (l: Locale) => {
@@ -33,15 +32,11 @@ export function LoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    setLoadingHint(/onrender\.com/i.test((await import('../api/client')).getApiUrl())
-      ? "Server uyg'onmoqda (Render — 1 daqiqagacha)..."
-      : '');
 
     const trimmedUsername = username.trim();
     const trimmedPassword = password.trim();
 
     const apiError = await loginWithCredentials(trimmedUsername, trimmedPassword);
-    setLoadingHint('');
     setLoading(false);
     if (!apiError) {
       navigate(from, { replace: true });
@@ -54,12 +49,8 @@ export function LoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    setLoadingHint(/onrender\.com/i.test((await import('../api/client')).getApiUrl())
-      ? "Server uyg'onmoqda (Render — 1 daqiqagacha)..."
-      : '');
 
     const apiError = await loginParentWithPhone(phone, pin);
-    setLoadingHint('');
     setLoading(false);
     if (!apiError) {
       navigate('/ota-ona', { replace: true });
@@ -172,22 +163,20 @@ export function LoginPage() {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-                {loadingHint && <p className="text-sm text-primary text-center">{loadingHint}</p>}
                 {error && <p className="text-sm text-danger text-center">{error}</p>}
                 <Button type="submit" className="w-full" size="lg" disabled={loading}>
                   <LogIn className="w-4 h-4" />
-                  {loading ? (loadingHint || 'Kirish...') : 'Kirish'}
+                  {loading ? 'Kirish...' : 'Kirish'}
                 </Button>
               </form>
             ) : (
               <form onSubmit={handleParentLogin} className="space-y-4">
                 <Input label={t('phone')} value={phone} onChange={setPhone} placeholder="+998 90 123 45 67" required />
                 <Input label={t('pin')} value={pin} onChange={setPin} placeholder="4 raqamli PIN" type="password" required />
-                {loadingHint && <p className="text-sm text-primary text-center">{loadingHint}</p>}
                 {error && <p className="text-sm text-danger text-center">{error}</p>}
                 <Button type="submit" className="w-full" size="lg" disabled={loading}>
                   <LogIn className="w-4 h-4" />
-                  {loading ? (loadingHint || 'Kirish...') : 'Kirish'}
+                  {loading ? 'Kirish...' : 'Kirish'}
                 </Button>
               </form>
             )}
