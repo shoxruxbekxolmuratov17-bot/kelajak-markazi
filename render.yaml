@@ -1,43 +1,33 @@
-# Render Blueprint — Kelajak Markazi (vaqtinchalik demo)
-# Dashboard: New → Blueprint → repo ulang
-#
-# Yoki qo'lda:
-#   API  → Web Service, Root Directory: server
-#   Web  → Static Site, Build: npm install && npm run build, Publish: dist
+# Render — Web + API bir xil servisda (tavsiya)
+# kelajak-api.onrender.com — sayt ham, API ham shu yerda
 
 services:
   - type: web
     name: kelajak-api
-    runtime: node
-    rootDir: server
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     plan: free
-    buildCommand: npm install && npm run seed
-    startCommand: npm start
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
+      - key: SERVE_WEB
+        value: "1"
       - key: DEMO_MODE
         value: "false"
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGIN
         value: "*"
-      - key: PORT
-        value: "3001"
 
+  # Eski alohida static sayt (ixtiyoriy — kelajak-api ishlatish osonroq)
   - type: web
     name: kelajak-web
     runtime: static
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && VITE_API_URL=/api npm run build
     staticPublishPath: dist
     pullRequestPreviewsEnabled: false
-    envVars:
-      - key: VITE_API_URL
-        value: https://kelajak-api.onrender.com/api
-      - key: NODE_ENV
-        value: production
-
-  # Agar Static Site o'rniga Web Service ishlatsangiz (tavsiya etilmaydi):
-  # buildCommand: npm install && npm run build
-  # startCommand: npm start
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://kelajak-api.onrender.com/api/*

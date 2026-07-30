@@ -53,6 +53,11 @@ import {
   type Message,
 } from './types.js';
 import type { Request, Response } from 'express';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 const DEMO_MODE = config.demoMode;
@@ -1228,6 +1233,25 @@ app.post('/api/partnerships', authRequired, requireRoles('superadmin', 'district
   mutate((db) => { db.partnerships.push(p); });
   res.status(201).json(p);
 });
+
+/** Web + API bir xil servisda (SERVE_WEB=1) */
+function mountWebApp() {
+  if (process.env.SERVE_WEB !== '1') return;
+  const distDir =
+    process.env.WEB_DIST?.trim() ||
+    path.join(__dirname, '..', '..', 'dist');
+  if (!fs.existsSync(path.join(distDir, 'index.html'))) {
+    console.warn('SERVE_WEB=1 — dist topilmadi:', distDir);
+    return;
+  }
+  app.use(express.static(distDir, { index: false, maxAge: '1h' }));
+  app.get(/^(?!\/api\/).*/, (_req, res) => {
+    res.sendFile(path.join(distDir, 'index.html'));
+  });
+  console.log('Web UI:', distDir);
+}
+
+mountWebApp();
 
 app.use((err: Error, _req: Request, res: Response, _next: unknown) => {
   console.error(err);

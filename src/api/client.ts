@@ -43,7 +43,17 @@ function resolveInitialApiUrl(): string {
   if (isLocalHost()) {
     return 'http://localhost:3001/api';
   }
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    // Web+API bir xil servisda — darhol ishlaydi, uyg'onish kutmaydi
+    if (host === 'kelajak-api.onrender.com') {
+      return '/api';
+    }
+  }
   const env = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
+  if (env?.startsWith('/')) {
+    return env.replace(/\/$/, '');
+  }
   if (env && !/localhost|127\.0\.0\.1/i.test(env)) {
     return env.replace(/\/$/, '');
   }
@@ -64,8 +74,13 @@ export async function initApiConfig() {
     try {
       const res = await fetch('/api-config.json', { cache: 'no-store' });
       if (!res.ok) return;
+    try {
       const data = (await res.json()) as { apiUrl?: string };
       const url = data.apiUrl?.trim();
+      if (url?.startsWith('/')) {
+        API_URL = url.replace(/\/$/, '');
+        return;
+      }
       if (url && !/localhost|127\.0\.0\.1/i.test(url)) {
         API_URL = url.replace(/\/$/, '');
       }
@@ -135,10 +150,16 @@ export function setActiveDistrictId(id: string | null) {
 
 type RequestOptions = RequestInit & { timeoutMs?: number };
 
-async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+function apiBase(url: string) {
+  if (url.startsWith('/')) return url;
+  return url.replace(/\/$/, '');
+}
+
+async function request<T>(path: string, options: RequestOptions = {}, attempt = 1): Promise<T> {
   await initApiConfig();
   const { timeoutMs = DEFAULT_TIMEOUT_MS, ...fetchOptions } = options;
-  const effectiveTimeout = resolveTimeout(timeoutMs, API_URL);
+  const base = apiBase(API_URL);
+  const effectiveTimeout = resolveTimeout(timeoutMs, base.startsWith('/') ? window.location.origin : base);
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(fetchOptions.headers as Record<string, string> | undefined),
@@ -152,7 +173,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   const timer = window.setTimeout(() => controller.abort(), effectiveTimeout);
 
   try {
-    const res = await fetch(`${API_URL}${path}`, {
+    const res = await fetch(`${base}${path}`, {
       ...fetchOptions,
       headers,
       signal: controller.signal,
@@ -163,18 +184,19 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     }
     return data as T;
   } catch (e) {
+    const remote = base.startsWith('/') || isSlowRemoteApi(base);
+    if (attempt === 1 && (e instanceof TypeError || (e instanceof DOMException && e.name === 'AbortError'))) {
+      window.clearTimeout(timer);
+      return request<T>(path, options, 2);
+    }
     if (e instanceof DOMException && e.name === 'AbortError') {
-      throw new Error(
-        isSlowRemoteApi(API_URL)
-          ? 'Server uyg\'onmoqda (Render bepul rejim — 1 daqiqagacha kuting)'
-          : 'Server javob bermadi (timeout)'
-      );
+      throw new Error(remote ? 'Server javob bermadi. Qayta bosing.' : 'Server javob bermadi (timeout)');
     }
     if (e instanceof TypeError) {
       throw new Error(
-        isSlowRemoteApi(API_URL)
-          ? `Server hali uyg'onmagan. Bir daqiqa kutib qayta urinib ko'ring (API: ${API_URL})`
-          : `Serverga ulanishning imkoni yo'q (API: ${API_URL})`
+        remote
+          ? `API ga ulanib bo'lmadi. Sahifani yangilab qayta bosing.`
+          : `Serverga ulanib bo'lmadi (${base})`
       );
     }
     throw e;
