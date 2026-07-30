@@ -2,7 +2,8 @@
 FROM node:22-alpine AS webbuild
 WORKDIR /repo
 COPY package*.json ./
-RUN npm install
+# postinstall server/ talab qiladi — web build uchun kerak emas
+RUN npm install --ignore-scripts
 COPY . .
 ENV VITE_API_URL=/api
 RUN npm run build
