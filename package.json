@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "npx concurrently -k --raw \"npm run dev:api\" \"vite\" \"node scripts/start-mobile.mjs\"",
+    "dev": "npx concurrently -k --raw \"npm run dev:api\" \"vite --host\" \"node scripts/start-mobile.mjs\"",
     "dev:all": "npx concurrently -k --raw \"npm run dev:api\" \"vite\" \"node scripts/start-mobile.mjs\"",
-    "dev:tunnel": "npx concurrently -k --raw \"npm run dev:api\" \"vite\" \"node scripts/start-mobile-tunnel.mjs\"",
+    "dev:tunnel": "npx concurrently -k --raw \"npm run dev:api\" \"vite --host\" \"node scripts/start-mobile-tunnel.mjs\"",
     "dev:lan": "npx concurrently -k --raw \"npm run dev:api\" \"vite\" \"node scripts/start-mobile.mjs\"",
     "stop": "node scripts/stop-dev.mjs",
     "dev:web": "vite",

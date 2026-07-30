@@ -321,6 +321,11 @@ export const useStore = create<AppState>()(
 
       loginWithCredentials: async (username, password) => {
         try {
+          const { wakeRemoteApi } = await import('../api/client');
+          const awake = await wakeRemoteApi();
+          if (!awake) {
+            return "Server uyg'onmadi (Render bepul rejim). 1–2 daqiqa kutib qayta urinib ko'ring.";
+          }
           const { token, user } = await api.login(username, password);
           setToken(token);
           set({
@@ -338,6 +343,11 @@ export const useStore = create<AppState>()(
 
       loginParentWithPhone: async (phone, pin) => {
         try {
+          const { wakeRemoteApi } = await import('../api/client');
+          const awake = await wakeRemoteApi();
+          if (!awake) {
+            return "Server uyg'onmadi (Render bepul rejim). 1–2 daqiqa kutib qayta urinib ko'ring.";
+          }
           const { token, user } = await api.parentLogin(phone, pin);
           setToken(token);
           set({

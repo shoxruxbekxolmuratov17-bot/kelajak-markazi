@@ -277,11 +277,36 @@ export const api = {
     request('/partnerships', { method: 'POST', body: JSON.stringify(data) }),
 };
 
+const WAKE_MAX_ATTEMPTS = 12;
+const WAKE_DELAY_MS = 8000;
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function wakeRemoteApi() {
+  const apiUrl = getApiUrl();
+  if (!isSlowRemoteApi(apiUrl)) return true;
+
+  for (let attempt = 1; attempt <= WAKE_MAX_ATTEMPTS; attempt += 1) {
+    try {
+      await api.health();
+      return true;
+    } catch {
+      if (attempt < WAKE_MAX_ATTEMPTS) await sleep(WAKE_DELAY_MS);
+    }
+  }
+  return false;
+}
+
 export async function apiAvailable() {
   try {
     await api.health();
     return true;
   } catch {
+    if (isSlowRemoteApi(getApiUrl())) {
+      return wakeRemoteApi();
+    }
     return false;
   }
 }

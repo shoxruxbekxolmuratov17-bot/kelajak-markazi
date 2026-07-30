@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maktab maslahatchisi · Kelajak Markazi</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; font-family: "Segoe UI", Tahoma, sans-serif; background: #0f172a; color: #1e293b; }
+    .deck { height: 100%; position: relative; }
+    .slide {
+      display: none; height: 100%; padding: 48px 56px 64px;
+      background: #fff; flex-direction: column; animation: fade .35s ease;
+    }
+    .slide.active { display: flex; }
+    @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .bar { position: absolute; top: 0; left: 0; right: 0; height: 6px; background: #5b21b6; }
+    .badge {
+      display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .04em;
+      text-transform: uppercase; color: #5b21b6; background: #ede9fe; padding: 6px 12px; border-radius: 999px; margin-bottom: 14px;
+    }
+    .badge.green { color: #047857; background: #d1fae5; }
+    h1 { font-size: 34px; line-height: 1.2; color: #1e40af; margin-bottom: 10px; max-width: 900px; }
+    h2 { font-size: 28px; color: #1e40af; margin-bottom: 8px; }
+    .sub { font-size: 15px; color: #64748b; max-width: 880px; line-height: 1.55; margin-bottom: 22px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; flex: 1; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .card {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 18px;
+    }
+    .card h3 { font-size: 15px; color: #7c3aed; margin-bottom: 8px; }
+    .card p, li { font-size: 14px; line-height: 1.5; color: #334155; }
+    .card small { display: block; margin-top: 6px; color: #64748b; font-size: 12px; }
+    ul { padding-left: 18px; }
+    li { margin-bottom: 8px; font-size: 15px; line-height: 1.45; }
+    li strong { color: #7c3aed; }
+    .note {
+      margin-top: auto; padding: 14px 18px; background: #eff6ff; border-left: 4px solid #1e40af;
+      border-radius: 8px; font-size: 14px; color: #1e3a8a;
+    }
+    .note.green { background: #ecfdf5; border-color: #059669; color: #065f46; }
+    .stats { display: flex; gap: 14px; margin: 8px 0 20px; flex-wrap: wrap; }
+    .stat {
+      background: #ecfdf5; color: #047857; font-weight: 700; font-size: 16px;
+      padding: 10px 18px; border-radius: 10px;
+    }
+    .footer {
+      position: fixed; bottom: 14px; left: 56px; right: 56px;
+      display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8;
+    }
+    .nav-hint {
+      position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+      font-size: 12px; color: #64748b; background: rgba(255,255,255,.9); padding: 4px 12px; border-radius: 999px;
+    }
+    .slide.alt { background: #f8fafc; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 8px; }
+    th, td { border: 1px solid #e2e8f0; padding: 10px 12px; text-align: left; }
+    th { background: #ede9fe; color: #5b21b6; }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck">
+
+    <section class="slide active" data-i="1">
+      <div class="bar"></div>
+      <span class="badge">Slayd 1 / 7</span>
+      <h1>Maktab maslahatchisining asosiy vazifalari</h1>
+      <p class="sub">O‘zbekiston Respublikasi maktab maslahatchisi — o‘quvchilarning ijtimoiy, kasbiy va madaniy rivojlanishini muvofiqlashtiruvchi mutaxassis. Manba: PF-86 farmon, 343-son PQ.</p>
+      <div class="grid2">
+        <div class="card"><h3>1. Prezident iqtidorli farzandlari</h3><p>Milliy dastur mazmunini yoritish va targ‘ib qilish.</p><small>PF-86 farmon (2025-yil 15-may)</small></div>
+        <div class="card"><h3>2. Kelajak markazi tarmoq to‘garaklari</h3><p>Madaniyat, san’at, kitobxonlik, sport, robototexnika.</p><small>343-son PQ (2019-yil 22-aprel)</small></div>
+        <div class="card"><h3>3. Tarix va qadriyatlar</h3><p>Tarixiy obidalar, madaniy yodgorliklar, milliy qadriyatlar.</p><small>Samarqand, Buxoro, Xiva; virtual turlar</small></div>
+        <div class="card"><h3>4. Yetakchilik va kengash</h3><p>Loyihalar, klublar, debatlar, «O‘quvchilar kengashi».</p><small>6–11 sinflar, saylov jarayoni</small></div>
+      </div>
+      <div class="note">Maslahatchi barcha sinf o‘quvchilari bilan ishlaydi — iqtidorli bolalar dasturidan kasb tanlovigacha.</div>
+    </section>
+
+    <section class="slide" data-i="2">
+      <div class="bar"></div>
+      <span class="badge">Slayd 2 / 7</span>
+      <h2>Asosiy funksiyalar (davomi)</h2>
+      <p class="sub">Loyihalar, ma’lumotlar bazasi va kasbga yo‘naltirish</p>
+      <div class="grid3">
+        <div class="card"><h3>Madaniyat · sport · ekologiya</h3><p>Estetik did, jismoniy faollik, kitobxonlik loyihalari.</p></div>
+        <div class="card"><h3>Ijtimoiy portfolio</h3><p>Kelajak markazlari, sport/musiqa maktablari, Yosh markazlari, kutubxonalar, muzeylar.</p></div>
+        <div class="card"><h3>Kasbga yo‘naltirish</h3><p>7–9 sinflar: «Mening kelajakdagi kasbim». Psixolog, kasb vakillari, ekskursiyalar.</p></div>
+      </div>
+      <ul style="margin-top:18px">
+        <li><strong>Portfolio:</strong> to‘garaklar, xalqaro musobaqalar, olimpiadalar, IELTS/SAT, kengash a’zoligi</li>
+        <li><strong>Klublar:</strong> Turon teatr, Iqtidor ansambli, Jadidlar izidan, Eco-schools, Debat, Raqamli avlod qizlari, inklyuziv klublar</li>
+      </ul>
+    </section>
+
+    <section class="slide" data-i="3">
+      <div class="bar"></div>
+      <span class="badge">Slayd 3 / 7</span>
+      <h2>Kasbga yo‘naltirish tamoyillari</h2>
+      <p class="sub">Har bir yosh guruhi uchun alohida metod — 1-sinfdan 11-sinfgacha</p>
+      <table>
+        <tr><th>Tamoyil</th><th>Mazmun</th></tr>
+        <tr><td>Yoshga mos</td><td>1–4 o‘yin · 5–7 loyiha/test · 8–11 amaliy tajriba</td></tr>
+        <tr><td>Amaliy tajriba</td><td>Ustaxonalar, laboratoriyalar, mahorat darslari</td></tr>
+        <tr><td>Qiziqish va qobiliyat</td><td>Testlar, so‘rovnomalar, individual kuzatuv</td></tr>
+        <tr><td>Kasb vakillari</td><td>Ishlab chiqarish tashriflari, «bir kun kasbda»</td></tr>
+        <tr><td>Mehnat bozori</td><td>Mintaqa ehtiyojlari, talab yuqori kasblar</td></tr>
+        <tr><td>Ongli tanlov</td><td>11-sinf tajriba va o‘z-o‘zini tahlil asosida</td></tr>
+      </table>
+      <div class="note" style="margin-top:16px">Prezident iqtidorli farzandlari: PM hamkorligi, TOP-300, MOCK. 9-sinfning 50% ini texnikumga yo‘naltirish.</div>
+    </section>
+
+    <section class="slide alt" data-i="4">
+      <div class="bar"></div>
+      <span class="badge green">Slayd 4 / 7</span>
+      <h1>Kelajak Markazi ilovasi</h1>
+      <p class="sub">Web + mobil platforma — markaz, maktab va ota-onani bitta raqamli tizimda birlashtiradi. Barcha maktab maslahatchilari tizimga ulanadi.</p>
+      <div class="stats">
+        <span class="stat">Web boshqaruv</span>
+        <span class="stat">Mobil APK</span>
+        <span class="stat">Markaz API</span>
+        <span class="stat">1–11 sinf</span>
+      </div>
+      <div class="grid2">
+        <div class="card"><h3>Nima beradi?</h3><ul><li>O‘quvchi, to‘garak, to‘lov, davomat</li><li>Ota-ona kabineti</li><li>Onlayn ro‘yxatdan o‘tish</li></ul></div>
+        <div class="card"><h3>Nega maslahatchi?</h3><ul><li>8+ vazifa ilovada bajariladi</li><li>Ijtimoiy portfolio elektron</li><li>Rahbariyat real vaqtda ko‘radi</li></ul></div>
+      </div>
+    </section>
+
+    <section class="slide alt" data-i="5">
+      <div class="bar"></div>
+      <span class="badge green">Slayd 5 / 7</span>
+      <h2>Maslahatchi profili</h2>
+      <p class="sub">Har bir maktab maslahatchisi uchun alohida shaxsiy kabinet</p>
+      <div class="grid3">
+        <div class="card"><h3>Akkaunt</h3><p>Maktab, F.I.Sh., telefon, mas’ul sinflar.</p></div>
+        <div class="card"><h3>Topshiriqlar</h3><p>PF-86, 343-PQ, markaz vazifalari — muddat bilan.</p></div>
+        <div class="card"><h3>Portfolio</h3><p>O‘quvchi ishtirokini elektron yuritish.</p></div>
+      </div>
+      <div class="note green" style="margin-top:20px">Barcha yosh guruhlari bitta ilovadan — daftar va Excel kerak emas. Shaxsiy reyting va statistika.</div>
+    </section>
+
+    <section class="slide alt" data-i="6">
+      <div class="bar"></div>
+      <span class="badge green">Slayd 6 / 7</span>
+      <h2>Reyting va topshiriqlar tizimi</h2>
+      <p class="sub">Har bir maslahatchi reytingli tartibda ishlaydi</p>
+      <table>
+        <tr><th>Mezon</th><th>Ulush</th><th>Izoh</th></tr>
+        <tr><td>Topshiriq bajarilishi</td><td>40%</td><td>Vaqtida va to‘liq vazifalar</td></tr>
+        <tr><td>Portfolio to‘ldirilishi</td><td>25%</td><td>O‘quvchi portfoliolar dolzarbligi</td></tr>
+        <tr><td>O‘quvchi qamrovi</td><td>20%</td><td>Barcha sinflar va klublar</td></tr>
+        <tr><td>Loyiha va tadbirlar</td><td>15%</td><td>Festival, ekskursiya, debat</td></tr>
+      </table>
+      <ul style="margin-top:14px">
+        <li>1. Berish → 2. Bajarish → 3. Tasdiqlash → 4. Reyting yangilanishi</li>
+      </ul>
+    </section>
+
+    <section class="slide" data-i="7">
+      <div class="bar"></div>
+      <span class="badge green">Slayd 7 / 7</span>
+      <h2>Barcha yosh toifasini qamrab olish</h2>
+      <p class="sub">1-sinfdan 11-sinfgacha — har bosqich uchun alohida modul</p>
+      <table>
+        <tr><th>Yosh guruhi</th><th>Ilovadagi qamrov</th></tr>
+        <tr><td>1–4 sinf</td><td>O‘yin orqali kasb, ijodiy klublar, ekologiya</td></tr>
+        <tr><td>5–7 sinf</td><td>Loyiha, test, «Mening kelajakdagi kasbim»</td></tr>
+        <tr><td>8–9 sinf</td><td>Kasb yo‘naltirish, texnikum (50%)</td></tr>
+        <tr><td>10–11 sinf</td><td>TOP-300, MOCK, ongli kasb tanlash</td></tr>
+      </table>
+      <div class="note green" style="margin-top:16px"><strong>Xulosa:</strong> PF-86 va 343-PQ talablari bajariladi — bitta raqamli platforma, barcha maktablar va yosh guruhlari qamrab olinadi.</div>
+    </section>
+  </div>
+
+  <div class="footer"><span>Kelajak Markazi · Maktab maslahatchisi · 2026</span><span id="counter">1 / 7</span></div>
+  <div class="nav-hint">← → yoki Space · F11 to‘liq ekran · Ctrl+P PDF</div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    let idx = 0;
+    function show(n) {
+      idx = (n + slides.length) % slides.length;
+      slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+      document.getElementById('counter').textContent = `${idx + 1} / ${slides.length}`;
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); show(idx + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); show(idx - 1); }
+      if (e.key === 'Home') show(0);
+      if (e.key === 'End') show(slides.length - 1);
+    });
+    document.addEventListener('click', (e) => {
+      if (e.clientX > window.innerWidth / 2) show(idx + 1); else show(idx - 1);
+    });
+  </script>
+</body>
+</html>

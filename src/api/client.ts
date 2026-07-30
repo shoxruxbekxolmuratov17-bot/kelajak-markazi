@@ -20,11 +20,9 @@ function guessRenderApiUrl(): string | null {
   if (typeof window === 'undefined') return null;
   const host = window.location.hostname;
   if (!host.endsWith('.onrender.com')) return null;
-  if (host === 'kelajak-markazi.onrender.com') {
+  // Barcha kelajak-* web saytlari bitta API ga ulanadi (kelajak-markazi-1 ham)
+  if (/^kelajak/i.test(host)) {
     return 'https://kelajak-api.onrender.com/api';
-  }
-  if (host.endsWith('-markazi.onrender.com')) {
-    return `https://${host.replace('-markazi.onrender.com', '-api.onrender.com')}/api`;
   }
   return null;
 }
@@ -308,11 +306,38 @@ export const api = {
     request<Partnership>('/partnerships', { method: 'POST', body: JSON.stringify(data) }),
 };
 
+const WAKE_MAX_ATTEMPTS = 12;
+const WAKE_DELAY_MS = 8000;
+
+function sleep(ms: number) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
+/** Render bepul rejim: server uxlaganda ketma-ket health ping */
+export async function wakeRemoteApi(onAttempt?: (attempt: number, max: number) => void) {
+  await initApiConfig();
+  if (!isSlowRemoteApi(API_URL)) return true;
+
+  for (let attempt = 1; attempt <= WAKE_MAX_ATTEMPTS; attempt += 1) {
+    onAttempt?.(attempt, WAKE_MAX_ATTEMPTS);
+    try {
+      await api.health();
+      return true;
+    } catch {
+      if (attempt < WAKE_MAX_ATTEMPTS) await sleep(WAKE_DELAY_MS);
+    }
+  }
+  return false;
+}
+
 export async function apiAvailable() {
   try {
     await api.health();
     return true;
   } catch {
+    if (isSlowRemoteApi(API_URL)) {
+      return wakeRemoteApi();
+    }
     return false;
   }
 }

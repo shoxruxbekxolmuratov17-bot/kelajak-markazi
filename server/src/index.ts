@@ -73,6 +73,10 @@ app.use((_req, res, next) => {
   next();
 });
 
+app.get('/', (_req, res) => {
+  res.redirect(302, '/api/health');
+});
+
 app.get('/api/health', (_req, res) => {
   res.json({
     ok: true,
